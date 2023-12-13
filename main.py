@@ -3,9 +3,9 @@ from discord import app_commands,ui,Integration, Intents, Interaction
 from discord.ext import tasks,commands
 from discord.ui import Select, View
 from discord.app_commands import CommandTree
-from discord.channel import VoiceChannel
 from datetime import datetime,date
 import traceback
+import named
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -14,11 +14,9 @@ slash = app_commands.CommandTree(client)
 f = open('token.txt','r')
 TOKEN = f.read()
 f.close
-CHANNEL_ID = 789831636526432296
 ver = '0.5.1α'
-voiceChannel: VoiceChannel
-vol = 1
 path = os.path.dirname(__file__)
+named = ''
 
 @client.event
 async def on_ready():
@@ -36,7 +34,10 @@ class Feedback(discord.ui.Modal, title='Feedback'):
     )
 
     async def on_submit(self, interaction: discord.Interaction):
-        await interaction.response.send_message(f'Thanks for your feedback, {self.name.value}!', ephemeral=True)
+        named = self.name.value
+        embed = discord.Embed(title=f'**{named.named()}**',color=0xeee657)
+        embed.add_field(name='',value='')
+        await interaction.response.send_message(embed = embed, ephemeral=True)
 
     async def on_error(self, interaction: discord.Interaction, error: Exception) -> None:
         await interaction.response.send_message('Oops! Something went wrong.', ephemeral=True)
