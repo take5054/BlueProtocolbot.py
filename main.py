@@ -27,7 +27,7 @@ async def on_ready():
     for command in slash.walk_commands():
         print(command.name)
 
-class Feedback(discord.ui.Modal, title='Feedback'):
+class Feedback(discord.ui.Modal, title='計測目標ネームド'):
     name = discord.ui.TextInput(
         label='ネームド',
         placeholder='計測目標ネームドの名前',
@@ -69,6 +69,5 @@ async def on_message(message):
 async def loop():
     # 現在の時刻
     now = datetime.now().strftime('%H:%M')
-    channel = client.get_channel(CHANNEL_ID)
 
 client.run(TOKEN)
