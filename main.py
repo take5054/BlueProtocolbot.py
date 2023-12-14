@@ -6,6 +6,7 @@ from discord.app_commands import CommandTree
 from datetime import datetime,date
 import traceback
 import named
+import openpyxl as px
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -27,20 +28,27 @@ async def on_ready():
     for command in slash.walk_commands():
         print(command.name)
 
-class Feedback(discord.ui.Modal, title='計測目標ネームド'):
+class namedpop(discord.ui.Modal, title="計測目標ネームド"):
     name = discord.ui.TextInput(
         label='ネームド',
         placeholder='計測目標ネームドの名前',
     )
 
     async def on_submit(self, interaction: discord.Interaction):
-        named = self.name.value
+        '''named = self.name.value
         embed = discord.Embed(title=f'**{named.named()}**',color=0xeee657)
-        embed.add_field(name='',value='')
-        await interaction.response.send_message(embed = embed, ephemeral=True)
+        embed.add_field(name='',value='')'''
+        data = openpyxl.load_workbook(path+ '/nameddata.xlsx')
+        datas = data["Sheet1"]
+        active_sheet = data.active
+        for row in active_sheet.rows:
+            excel = []
+            for cell in row:
+                excel.apped(cell.value)
+        await interaction.response.send_message(f"{temp}")
 
     async def on_error(self, interaction: discord.Interaction, error: Exception) -> None:
-        await interaction.response.send_message('Oops! Something went wrong.', ephemeral=True)
+        await interaction.response.send_message('ERROR', ephemeral=True)
         traceback.print_exception(type(error), error, error.__traceback__)
 
 
@@ -55,8 +63,8 @@ async def help(ctx):
     await ctx.response.send_message(embed=embed)
 
 @slash.command(name='named', description='BlueProtocolネームドinfo')
-async def namedinfo(ctx, text:str):
-    await ctx.response.send_modal(Feedback())
+async def namedinfo(ctx):
+    await ctx.response.send_modal(namedpop())
 
 @client.event
 async def on_message(message):
